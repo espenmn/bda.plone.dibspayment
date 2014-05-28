@@ -49,8 +49,6 @@ class IDibsPaymentData(IPaymentData):
 class DibsPayment(Payment):
     pid = 'dibs_payment'
     label = _('dibs_payment', 'Dibs Payment')
-    available = True
-    default = False
     
     def init_url(self, uid):
         return '%s/@@dibs_payment?uid=%s' % (self.context.absolute_url(), uid)
