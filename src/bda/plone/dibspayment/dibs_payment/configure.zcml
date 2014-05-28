@@ -1,0 +1,14 @@
+<configure xmlns="http://namespaces.zope.org/zope"
+           xmlns:browser="http://namespaces.zope.org/browser">
+
+  <adapter name="dibs_payment" factory=".DibsPayment" />
+  
+  <browser:page
+    for="*"
+    name="dibs_payment"
+    class=".DibsPay"
+    permission="zope2.View"
+  />
+  
+
+</configure>
