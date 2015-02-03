@@ -68,15 +68,18 @@ class DibsPay(BrowserView):
         currency = data['currency']
         description = data['description']
         ordernumber = data['ordernumber']
+        
+        current_language = "nb_NO"
 
         parameters = {
             'amount': amount,
             'currency': currency,
-            'merchant': 4255617,
-            'language': 'no',
+            'merchant': id,
+            'language': current_language,
             'acceptReturnUrl': self.context.absolute_url() + '/dibsed?uid=' +  order_uid,
             'cancelreturnurl': self.context.absolute_url() + '/dibs_payment_aborted',
             'orderId': ordernumber,
+            'test' : 1,
         }
         
         #assembles final url
@@ -115,11 +118,11 @@ class IDibsSettings(model.Schema):
         ],
     )
 
-    dibs_id = schema.Text(
+    dibs_id = schema.TextLine(
         title=_(u"label_dibsid",
-                default=u"Dibs Id"),
+                default=u"Dibs merchant Id"),
         description=_(u"help_dibs_id",
-                      default=u"Dibs ID"),
+                      default=u"Dibs merchant ID"),
         required=True,
     )
 
