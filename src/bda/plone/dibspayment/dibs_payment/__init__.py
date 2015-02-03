@@ -31,25 +31,6 @@ _ = MessageFactory('bda.plone.payment')
 
 CREATE_PAY_INIT_URL = "https://sat1.dibspayment.com/dibspaymentwindow/entrypoint"
 
-class IDibsPaymentData(IPaymentData):
-    """Data adapter interface for DIBS payment.
-    """
-    
-    def uid_for(ordernumber):
-        """Return order_uid for ordernumber.
-        """
-    
-    def data(order_uid):
-        """Return dict in following format:
-        
-        {
-            'amount': '1000',
-            'currency': 'NOK',
-            'description': 'description',
-            'ordernumber': '1234567890',
-        }
-        """
-
 
 class DibsPayment(Payment):
     pid = 'dibs_payment'
@@ -83,19 +64,21 @@ class DibsPay(BrowserView):
         
         url = CREATE_PAY_INIT_URL
         
-        parameters = {
-            'accountid':    '4255617',
-            'amount':       amount,
-            'currency':     currency,
-            'orderid':      'order_uid',
-            'merchant':     id,
-            'acceptReturnUrl': base_url + '/dibs_payment_success',
-            'cancelreturnurl': base_url + '/dibs_payment_aborted',
-            'billingLastName': 'Etternavn',
-            'billingFirstName':	'Firsstname',
-            'orderId':      'testorder',
-            'test': 1,
-        }
+        data = IPaymentData(self.context).data(order_uid)
+		amount = data['amount']
+		currency = data['currency']
+		description = data['description']
+		ordernumber = data['ordernumber']
+
+		parameters = {
+			'amount': amount,
+			'currency': currency,
+			'merchant': 4255617,
+			'language': current_language,
+			'acceptReturnUrl': self.context.absolute_url() + '/dibsed?uid=' + order_uid,
+			'cancelreturnurl': self.context.absolute_url() + '/dibs_payment_aborted',
+			'orderId': ordernumber,
+		}
         
         #assembles final url
         param = []
@@ -106,7 +89,21 @@ class DibsPay(BrowserView):
         
         self.request.response.redirect("%s?%s" % (url, param))
         
-        
+
+
+class DibsFinished(BrowserView):
+	def id(self):
+		uid = self.request.get('uid', None)
+		payment = Payments(self.context).get('dibs')
+		payment.succeed(self.request, uid)
+		
+		try:
+			order = get_order(self.context, uid)
+		except ValueError:
+			return None
+		return order.attrs.get('ordernumber')
+
+  
         
 class IDibsSettings(model.Schema):
     # Settings for Dibs payment method 
