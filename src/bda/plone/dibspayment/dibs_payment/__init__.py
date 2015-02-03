@@ -4,19 +4,24 @@ from zExceptions import Redirect
 from zope.i18nmessageid import MessageFactory
 from Products.Five import BrowserView
 from Products.CMFCore.utils import getToolByName
-from ..interfaces import IPaymentData
+from bda.plone.payment.interfaces import IPaymentData
 
 from bda.plone.shop.interfaces import IShopSettings
+from bda.plone.shop.interfaces import IShopSettingsProvider
 from zope.component import getUtility
 from plone.registry.interfaces import IRegistry
     
-from .. import (
+from bda.plone.payment import (
     Payment,
     Payments,
 )
 
+#from zope.interface import provider
+from zope.interface import alsoProvides
+from zope import schema
+from plone.supermodel import model
 
-from ZTUtils import make_query
+#from ZTUtils import make_query
 from bda.plone.orders.common import get_order
 
 
@@ -62,7 +67,7 @@ class DibsPayError(Exception):
 class DibsPay(BrowserView):
     """
     Assembles an url to dibs.
-    Need to check how to use (in lin 109)
+    Need to check how to use (in line 109)
     make_query() 
     """
 
@@ -100,5 +105,27 @@ class DibsPay(BrowserView):
         param = "&".join(param)
         
         self.request.response.redirect("%s?%s" % (url, param))
-
         
+        
+        
+class IDibsSettings(model.Schema):
+    # Settings for Dibs payment method 
+
+    model.fieldset(
+        'dibs',
+        label=_(u'Dibs', default=u'Dibs'),
+        fields=[
+            'dibs_id',
+        ],
+    )
+
+    dibs_id = schema.Text(
+        title=_(u"label_dibsid",
+                default=u"Dibs Id"),
+        description=_(u"help_dibs_id",
+                      default=u"Dibs ID"),
+        required=True,
+    )
+
+alsoProvides(IDibsSettings, IShopSettingsProvider)
+   

@@ -1,5 +1,6 @@
 <configure xmlns="http://namespaces.zope.org/zope"
-           xmlns:browser="http://namespaces.zope.org/browser">
+           xmlns:browser="http://namespaces.zope.org/browser"
+           xmlns:genericsetup="http://namespaces.zope.org/genericsetup">
 
   <adapter name="dibs_payment" factory=".DibsPayment" />
   
@@ -9,6 +10,7 @@
     class=".DibsPay"
     permission="zope2.View"
   />
-  
+
+
 
 </configure>
