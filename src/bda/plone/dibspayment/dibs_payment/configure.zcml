@@ -10,7 +10,13 @@
     class=".DibsPay"
     permission="zope2.View"
   />
-
+  
+  
+  <browser:page
+     for="*"
+     name="dibsed"
+     class=".DibsFinished"
+     permission="zope2.View" />
 
 
 </configure>

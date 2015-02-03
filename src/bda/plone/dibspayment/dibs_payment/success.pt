@@ -24,7 +24,7 @@
         <h1 class="documentFirstHeading"
             i18n:translate="payment_success">Payment Success</h1>
     
-        <p i18n:translate="six_payment_success_text">
+        <p i18n:translate="dibs_payment_success_text">
           Your Order has been completed successful.
         </p>
       
@@ -36,7 +36,7 @@
             i18n:translate="payment_error">Payment Error</h1>
         
         <p>
-          <span i18n:translate="six_payment_verification_failed">
+          <span i18n:translate="dibs_payment_verification_failed">
             Something nasty is going on. Payment verification failed.
             If you think the failure remains on our side, please contact
           </span>

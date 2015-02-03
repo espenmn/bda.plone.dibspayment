@@ -22,7 +22,7 @@
     <h1 class="documentFirstHeading"
         i18n:translate="payment_aborted">Payment Aborted</h1>
     
-    <p i18n:translate="six_payment_aborted_text">
+    <p i18n:translate="dibs_payment_aborted_text">
       Payment has been aborted.
     </p>
     

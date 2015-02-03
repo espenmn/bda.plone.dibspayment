@@ -53,32 +53,31 @@ class DibsPay(BrowserView):
     """
 
     def __call__(self, **kw):
-        import pdb; pdb.set_trace()
-        uid = self.request['uid']
+        order_uid = self.request['uid']
         base_url = self.context.absolute_url()
+        
         registry = getUtility(IRegistry)
-        settings = registry.forInterface(IShopSettings)
-        password =  settings.shop_account_password
-        id =  settings.shop_account_id
-        currency =  settings.shop_currency
+        settings = registry.forInterface(IDibsSettings)
+        #password =  settings.shop_account_password
+        id =  settings.dibs_id
         
         url = CREATE_PAY_INIT_URL
         
         data = IPaymentData(self.context).data(order_uid)
-		amount = data['amount']
-		currency = data['currency']
-		description = data['description']
-		ordernumber = data['ordernumber']
+        amount = data['amount']
+        currency = data['currency']
+        description = data['description']
+        ordernumber = data['ordernumber']
 
-		parameters = {
-			'amount': amount,
-			'currency': currency,
-			'merchant': 4255617,
-			'language': current_language,
-			'acceptReturnUrl': self.context.absolute_url() + '/dibsed?uid=' + order_uid,
-			'cancelreturnurl': self.context.absolute_url() + '/dibs_payment_aborted',
-			'orderId': ordernumber,
-		}
+        parameters = {
+            'amount': amount,
+            'currency': currency,
+            'merchant': 4255617,
+            'language': 'no',
+            'acceptReturnUrl': self.context.absolute_url() + '/dibsed?uid=' +  order_uid,
+            'cancelreturnurl': self.context.absolute_url() + '/dibs_payment_aborted',
+            'orderId': ordernumber,
+        }
         
         #assembles final url
         param = []
@@ -92,16 +91,16 @@ class DibsPay(BrowserView):
 
 
 class DibsFinished(BrowserView):
-	def id(self):
-		uid = self.request.get('uid', None)
-		payment = Payments(self.context).get('dibs')
-		payment.succeed(self.request, uid)
-		
-		try:
-			order = get_order(self.context, uid)
-		except ValueError:
-			return None
-		return order.attrs.get('ordernumber')
+    def id(self):
+        uid = self.request.get('uid', None)
+        payment = Payments(self.context).get('dibs')
+        payment.succeed(self.request, uid)
+        
+        try:
+            order = get_order(self.context, uid)
+        except ValueError:
+            return None
+        return order.attrs.get('ordernumber')
 
   
         

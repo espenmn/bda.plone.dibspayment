@@ -23,7 +23,7 @@
         i18n:translate="payment_failed">Payment Failed</h1>
     
     <p>
-      <span i18n:translate="six_payment_failed_text">
+      <span i18n:translate="dibs_payment_failed_text">
         Sorry. Failed to complete your order. If you think the failure remains
         on our side, please contact
       </span>
